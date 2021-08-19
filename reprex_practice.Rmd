@@ -37,13 +37,32 @@ mack_creek_lengths <- mack_creek_vertebrates %>%
   clean_names() %>% 
   select(year:sampledate) %>% 
   filter(section == "CC") %>% 
-  mutate(across(where(is.character, tolower))) %>% 
+  mutate(across(where(is.character), tolower)) %>% 
   drop_na(species) %>% 
   group_by(species) %>% 
   summarize(mean_length_cm = mean(length1, na.rm = TRUE),
             sd_length_cm = sd(length1, na.rm = TRUE)) %>% 
   ungroup()
 ```
+
+```{r}
+# My reprex
+library(tidyverse)
+
+df <- tribble(
+  ~name, ~age, ~occupation,
+  "BOB", 42, "Lawyer",
+  "Tammy", 37, "Police Officer",
+  "mIke", 16, "Student"
+)
+
+# Set the character values to lowercase using across()
+df <- df %>% 
+  mutate(across(where(is.character), tolower))
+
+df
+```
+
 
 ### reprex 2
 
@@ -55,10 +74,29 @@ mack_creek_vertebrates %>%
   clean_names() %>% 
   filter(species == "ONCL") %>% 
   ggplot(aes(x = length1, y = weight)) +
-         geom_point(aes(shape = 12), color = "purple") +
+         geom_point(shape = 12, color = "purple") +
          theme_minimal() +
          labs(x = "Cutthroat trout length (cm)",
               y = "Weight (g)")
 ```
+
+```{r}
+# My reprex 2
+
+# Simple data frame
+df_2 <- tribble(
+  ~weight, ~length,
+  23, 45,
+  22, 52,
+  19, 50,
+  19, 44,
+  20, 50
+)
+
+# Make a plot. You only set things in aes() if it is based on a variable.
+ggplot(df_2, aes(x = weight, y = length)) +
+  geom_point(shape = 12, color = "purple")
+```
+
 
 ## End
